@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wander | Upload Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --navy: #1e293b;
+            --bg: #f0f9ff;
+            --text-gray: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background-color: var(--bg); 
+            background-image: radial-gradient(#bae6fd 1.5px, transparent 1.5px); 
+            background-size: 30px 30px; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+        }
+
+        .upload-card {
+            width: 90%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 50px 40px;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.2);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        h2 { font-family: 'Oswald'; font-size: 24px; color: var(--navy); text-transform: uppercase; margin-bottom: 10px; }
+        p { color: var(--text-gray); font-size: 14px; margin-bottom: 30px; font-weight: 500; }
+
+        .drop-zone {
+            background: #fff;
+            border: 2px dashed #cbd5e1;
+            border-radius: 25px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .drop-zone:hover { border-color: var(--primary); background: #f8fafc; }
+
+        .file-info { display: none; margin-top: 15px; font-weight: 700; color: #22c55e; font-size: 14px; }
+
+        .action-btn {
+            width: 100%;
+            background-color: var(--navy);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 25px;
+            display: none; /* Hidden until file selected */
+            transition: 0.3s;
+        }
+
+        .action-btn:hover { background-color: var(--primary); transform: translateY(-3px); }
+
+        .cancel-link {
+            display: block;
+            margin-top: 20px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="upload-card">
+        <div class="icon-circle"><i class="fas fa-file-invoice" id="main-icon"></i></div>
+        <h2>Upload Ticket</h2>
+        <p>Our AI will extract your travel details automatically for crisis monitoring.</p>
+
+        <div class="drop-zone" onclick="document.getElementById('ticket-input').click()">
+            <i class="fas fa-cloud-upload-alt" style="font-size: 30px; color: #cbd5e1; margin-bottom: 10px;"></i>
+            <div style="font-weight: 700; color: var(--navy);">Click to select file</div>
+            <div style="font-size: 12px; color: var(--text-gray);">Supports JPG, PNG, or PDF</div>
+            <input type="file" id="ticket-input" style="display: none;" accept="image/*,.pdf" onchange="handleFile(this)">
+        </div>
+
+        <div id="file-name" class="file-info">
+            <i class="fas fa-check-circle"></i> <span id="name-text"></span>
+        </div>
+
+        <button id="ai-btn" class="action-btn" onclick="uploadToServer()">
+            START AI EXTRACTION <i class="fas fa-robot"></i>
+        </button>
+
+        <a href="modes.html" class="cancel-link">Back to options</a>
+    </div>
+    <script>
+    let fileToUpload = null; 
+
+    function handleFile(input) {
+        if (input.files && input.files[0]) {
+            fileToUpload = input.files[0];
+            
+            // UI Updates
+            document.getElementById('name-text').innerText = fileToUpload.name;
+            document.getElementById('file-name').style.display = "block";
+            document.getElementById('ai-btn').style.display = "block";
+            document.getElementById('main-icon').className = "fas fa-check";
+        }
+    }
+
+    async function uploadToServer() {
+        if (!fileToUpload) {
+            alert("Please select a file first!");
+            return;
+        }
+
+        const btn = document.getElementById('ai-btn');
+        btn.innerHTML = 'COMPRESSING... <i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+
+        const reader = new FileReader();
+        reader.readAsDataURL(fileToUpload);
+        
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            
+            img.onload = async () => {
+                // --- IMAGE COMPRESSION LOGIC ---
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 1200; // Optimal for Gemini Vision
+                let width = img.width;
+                let height = img.height;
+
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Convert to JPEG at 0.7 quality to reduce payload size
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+                
+                // Proceed to send the compressed string
+                await sendToBackend(compressedBase64, btn);
+            };
+        };
+    }
+
+    async function sendToBackend(base64String, btn) {
+        btn.innerHTML = 'AI ANALYZING... <i class="fas fa-robot fa-spin"></i>';
+
+        const payload = {
+            input_type: 'Photo',
+            email: localStorage.getItem('userEmail') || 'guest@example.com',
+            ticket: base64String 
+        };
+
+        try {
+            const response = await fetch('/api/upload-ticket', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                window.location.href = 'report.html'; 
+            } else {
+                const errData = await response.json();
+                alert("Server error: " + (errData.message || "Upload failed"));
+                resetBtn(btn);
+            }
+        } catch (err) {
+            console.error("Upload Error:", err);
+            alert("Connection Error. Is the backend running?");
+            resetBtn(btn);
+        }
+    }
+
+    function resetBtn(btn) {
+        btn.innerHTML = 'START AI EXTRACTION <i class="fas fa-robot"></i>';
+        btn.disabled = false;
+    }
+</script>
+</body>
+</html>

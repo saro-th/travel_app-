@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wander | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { height: 100vh; display: flex; font-family: 'Poppins', sans-serif; overflow: hidden; }
+        .collage-section { flex: 1.2; background-color: #fff; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 10px; }
+        .collage-img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+        .img-tall { grid-row: span 2; }
+        .login-side { flex: 1; background: linear-gradient(135deg, #e0e0e0 0%, #1a1a1a 100%); position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .login-card { position: relative; z-index: 2; width: 85%; max-width: 400px; text-align: center; }
+        .welcome-header { background-color: rgba(220, 220, 220, 0.9); padding: 15px 0; border-radius: 30px; margin-bottom: -20px; position: relative; z-index: 3; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .form-body { background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 50px 30px 30px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.3); text-align: left; }
+        .form-body label { font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; display: block; color: #000; }
+        .form-body input { width: 100%; padding: 12px 15px; border-radius: 25px; border: none; margin-bottom: 20px; outline: none; }
+        .next-btn { position: absolute; bottom: 30px; right: 30px; width: 50px; height: 50px; background: rgba(255,255,255,0.4); border-radius: 50%; border: none; cursor: pointer; font-size: 1.5rem; }
+        
+        /* Error state for empty fields */
+        .input-error { border: 1px solid #ef4444 !important; background-color: #fef2f2 !important; }
+    </style>
+</head>
+<body>
+    <div class="collage-section">
+        <img src="https://i.postimg.cc/L4xbNJmq/1.jpg" class="collage-img img-tall">
+        <img src="https://i.postimg.cc/mrSwknDs/3.jpg" class="collage-img">
+        <img src="https://i.postimg.cc/LXNNCWKx/2.jpg" class="collage-img">
+        <img src="https://i.postimg.cc/8P4DNpdC/center.jpg" class="collage-img">
+        <img src="https://i.postimg.cc/wxknsW15/bus1.jpg" class="collage-img">
+        <img src="https://i.postimg.cc/85Sn7WNc/vacation.jpg" class="collage-img">
+        <img src="https://i.postimg.cc/8PSPTXqL/ship.jpg" class="collage-img">
+        <img src="https://i.postimg.cc/qvyN4433/fer.jpg" class="collage-img">
+        <img src="https://i.postimg.cc/85Sn7WNc/vacation.jpg" class="collage-img">
+    </div>
+    <div class="login-side">
+        <div class="login-card">
+            <div class="welcome-header"><h2>WELCOME</h2></div>
+            <div class="form-body">
+                <label>EMAIL :</label>
+                <input type="email" id="email" placeholder="username@gmail.com">
+                <label>PASSWORD :</label>
+                <input type="password" id="password" placeholder="********">
+                <div style="text-align:center; margin:10px 0; font-weight:bold; color:#000;">OR</div>
+                <div id="google-btn" onclick="handleGoogleLogin()" style="background:white; padding:10px; border-radius:5px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:600; color:#555; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <img src="https://i.postimg.cc/QtfkjWMp/google.png" style="width:20px; margin-right:10px;"> 
+                    <span id="google-text">Continue with Google</span>
+                </div>
+            </div>
+        </div>
+        <button onclick="validate()" class="next-btn">></button>
+    </div>
+ <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDjQenij4DjY5xiVDjWE0ot5STZc7cv1YE",
+    authDomain: "wander-ai-71a28.firebaseapp.com",
+    projectId: "wander-ai-71a28",
+    storageBucket: "wander-ai-71a28.firebasestorage.app",
+    messagingSenderId: "1081009801849",
+    appId: "1:1081009801849:web:be18e4b67cc76118fee2a8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // 1. FIX FOR EMAIL/PASSWORD VALIDATION
+  window.validate = function() {
+      const emailField = document.getElementById('email');
+      const passField = document.getElementById('password');
+
+      // Reset errors
+      emailField.classList.remove('input-error');
+      passField.classList.remove('input-error');
+
+      if (emailField.value.trim() === "" || passField.value.trim() === "") {
+          if (emailField.value.trim() === "") emailField.classList.add('input-error');
+          if (passField.value.trim() === "") passField.classList.add('input-error');
+          
+          alert("Please enter both Email and Password.");
+          return;
+      }
+
+      // Save name/email for Dashboard consistency
+      // Since we don't have a name from a manual login yet, we use a placeholder or the email prefix
+      const displayName = emailField.value.split('@')[0];
+      localStorage.setItem('passengerName', displayName);
+      localStorage.setItem('userEmail', emailField.value);
+
+      window.location.href = 'gateway.html';
+  };
+
+  // 2. GOOGLE LOGIN FUNCTION
+  window.handleGoogleLogin = async function() {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      localStorage.setItem('passengerName', user.displayName);
+      localStorage.setItem('userEmail', user.email);
+      localStorage.setItem('userPhoto', user.photoURL);
+
+      window.location.href = 'gateway.html';
+    } catch (error) {
+      console.error("Firebase Error:", error.code);
+      alert("Error: " + error.message);
+    }
+  };
+</script>
+</body>
+</html>

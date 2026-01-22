@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wander | The Unified Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Poppins:wght@400;600;700;800;900&family=Playfair+Display:wght@600&family=Great+Vibes&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0ea5e9;
+            --navy: #1e293b;
+            --bg-light: #e0f2fe;
+            --glass: rgba(255, 255, 255, 0.85);
+            --primary: #0ea5e9;
+            --primary-light: #e0f2fe;
+            --white: #ffffff;
+            --card-bg: #ffffff;
+            --navy-dark: #1e293b;
+            --text-gray: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { height: 100vh; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        section { height: 100vh; width: 100vw; position: relative; overflow: hidden; display: flex; }
+
+        /* --- SCREEN 1: HERO --- */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.4)),
+                        url("https://i.postimg.cc/MTxKWB84/twa.jpg") no-repeat center / cover;
+            justify-content: center; align-items: center; text-align: center; color: white;
+        }
+        .hero h1 { font-size: clamp(60px, 10vw, 100px); font-weight: 800; letter-spacing: -2px; line-height: 0.9; }
+        .hero h2 { font-size: 16px; letter-spacing: 12px; text-transform: uppercase; margin: 20px 0; font-weight: 300; }
+        .hero h3 { font-size: 40px; font-weight: 800; letter-spacing: 5px; margin-bottom: 30px; }
+        .btn-start {
+            display: inline-block; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3); color: white; padding: 16px 45px;
+            border-radius: 100px; text-decoration: none; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2px; transition: 0.3s; cursor: pointer;
+        }
+        .btn-start:hover { background: #fff; color: #000; transform: translateY(-5px); }
+
+        /* --- SCREEN 2: LOGIN --- */
+        .collage-section { flex: 1.2; background-color: #fff; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 10px; }
+        .collage-img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+        .img-tall { grid-row: span 2; }
+        .login-side { flex: 1; background: linear-gradient(135deg, #e0e0e0 0%, #1a1a1a 100%); position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .wave-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.15; mix-blend-mode: multiply; background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000') center/cover; }
+        .login-card { position: relative; z-index: 2; width: 85%; max-width: 400px; text-align: center; }
+        .welcome-header { background-color: rgba(220, 220, 220, 0.9); padding: 15px 0; border-radius: 30px; margin-bottom: -20px; position: relative; z-index: 3; box-shadow: 0 4px 10px rgba(88, 156, 212, 0.2); }
+        .welcome-header h2 { font-size: 1.8rem; color: #333; letter-spacing: 1px; font-family: 'Poppins', sans-serif; }
+        .form-body { background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 50px 30px 30px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.3); text-align: left; font-family: 'Poppins', sans-serif; }
+        .form-body label { font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; display: block; color: #000; }
+        .form-body input { width: 100%; padding: 12px 15px; border-radius: 25px; border: none; margin-bottom: 20px; outline: none; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); }
+        .next-btn { position: absolute; bottom: 30px; right: 30px; width: 50px; height: 50px; background: rgba(255,255,255,0.4); border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #000; font-size: 1.5rem; font-weight: bold; transition: 0.3s; }
+
+        /* --- SCREEN 3: GATEWAY --- */
+        .gateway-section { background-color: #ffffff; justify-content: center; align-items: center; flex-direction: column; }
+        .gateway-container { text-align: center; z-index: 2; opacity: 0; transform: translateY(30px); transition: 1s ease-out; }
+        section.active-step .gateway-container { opacity: 1; transform: translateY(0); }
+        .top-text { font-family: 'Playfair Display'; font-size: 14px; letter-spacing: 4px; font-weight: 600; color: #000; text-transform: uppercase; margin-bottom: -15px; }
+        .script-text { font-family: 'Great Vibes', cursive; font-size: clamp(60px, 12vw, 110px); color: #111; margin: 10px 0; }
+        .bottom-text { font-family: 'Playfair Display'; font-size: 12px; letter-spacing: 5px; font-weight: 600; color: #000; text-transform: uppercase; }
+        .decor-image { position: absolute; top: 0; right: 0; width: 300px; z-index: 10; pointer-events: none; clip-path: circle(70% at 100% 0%); transform: translateX(50px); transition: 1.2s ease; }
+        section.active-step .decor-image { transform: translateX(0); }
+
+        /* --- SCREEN 4: MODE SELECTION --- */
+        .mode-section { background-color: var(--bg-light); background-image: radial-gradient(#bae6fd 1px, transparent 1px); background-size: 30px 30px; }
+        .content-section { width: 45%; padding: 80px; display: flex; flex-direction: column; justify-content: center; z-index: 10; opacity: 0; transform: translateX(-50px); transition: 1s ease; }
+        section.active-step .content-section { opacity: 1; transform: translateX(0); }
+        .content-section h1 { font-size: 58px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -2px; color: var(--navy); }
+        .content-section p { font-size: 18px; color: #64748b; margin-bottom: 40px; font-weight: 500; }
+        .button-group { display: flex; gap: 20px; }
+        .action-btn { background-color: var(--navy); color: white; border: none; padding: 18px 45px; border-radius: 20px; font-size: 14px; font-weight: 700; letter-spacing: 2px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 20px rgba(30, 41, 59, 0.2); }
+        .action-btn:hover { transform: translateY(-5px); background-color: var(--primary-blue); box-shadow: 0 15px 30px rgba(14, 165, 233, 0.4); }
+
+        /* Strips and Visuals (Restored Animations) */
+        .visual-section { width: 55%; height: 100%; display: flex; gap: 15px; padding: 40px; align-items: flex-start; }
+        .strip { flex: 1; background-size: cover; background-position: center; border-radius: 50px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); filter: grayscale(20%); }
+        .strip:hover { flex: 1.5; filter: grayscale(0%); border-radius: 30px; }
+        .s-1 { height: 60%; background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=400'); margin-top: 40px; }
+        .s-2 { height: 85%; background-image: url('https://images.unsplash.com/photo-1499678329028-101435549a4e?q=80&w=400'); }
+        .s-3 { height: 50%; background-image: url('https://images.unsplash.com/photo-1500835556837-99ac94a94552?q=80&w=400'); margin-top: 80px;}
+        .s-4 { height: 95%; background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=400'); }
+        .s-5 { height: 70%; background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=400'); margin-top: 20px;}
+        .dot-dec { position: absolute; background-color: var(--primary-blue); border-radius: 50%; z-index: 20; opacity: 0.6; }
+        .dot-1 { width: 30px; height: 30px; bottom: 10%; left: 42%; }
+        .dot-2 { width: 15px; height: 15px; top: 15%; right: 5%; }
+
+        /* --- SCREEN 5: DECISION GATEWAY --- */
+        .decision-section { background: #f8fafc; justify-content: center; align-items: center; text-align: center; }
+        .decision-card { background: white; padding: 60px; border-radius: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); max-width: 600px; border: 1px solid #e2e8f0; }
+
+        /* --- SCREEN 6: REBOOK PREFERENCE --- */
+        .rebook-section { background-color: #f0f9ff; justify-content: center; align-items: center; padding: 20px; }
+
+        /* --- SCREEN 7: FINAL JOURNEY FORM --- */
+        .journey-form-section { background-color: #f0f9ff; background-image: radial-gradient(#e0f2fe 2px, transparent 2px); background-size: 30px 30px; justify-content: center; align-items: center; padding: 20px; }
+        .main-card { width: 100%; max-width: 1000px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-radius: 40px; padding: 50px; box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.2); border: 1px solid rgba(255, 255, 255, 0.7); position: relative; overflow-y: auto; max-height: 90vh; }
+        .section-badge { background: linear-gradient(135deg, var(--navy) 0%, #334155 100%); color: white; padding: 8px 24px; border-radius: 50px; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1.5px; display: inline-block; margin-bottom: 25px; }
+        .row-form { display: flex; gap: 25px; margin-bottom: 20px; }
+        .col-form { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .travel-grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px; margin-bottom: 25px; }
+        .grid-item-form { display: flex; flex-direction: column; gap: 8px; }
+        .form-label { font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-left: 5px; }
+        .form-input { width: 100%; padding: 12px 20px; border-radius: 16px; border: 2px solid #e2e8f0; background: white; outline: none; transition: 0.3s; }
+        .form-input:focus { border-color: var(--primary); transform: translateY(-2px); }
+        .split-layout-form { display: grid; grid-template-columns: 1.2fr 1fr; gap: 50px; }
+        .footer-form { display: flex; justify-content: space-between; align-items: center; margin-top: 50px; }
+        .nav-btn-form { width: 55px; height: 55px; background: white; border-radius: 18px; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 1px solid #e2e8f0; color: var(--navy); transition: 0.3s; }
+
+        /* --- MODAL UPLOAD OVERLAY (Integrated from Light Blue UI) --- */
+        #upload-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #e0f2fe; z-index: 9999; display: none; justify-content: center; align-items: center;
+            background-image: radial-gradient(#bae6fd 1px, transparent 1px); background-size: 30px 30px;
+        }
+        .container-upload { width: 100%; max-width: 480px; background: #ffffff; padding: 40px; border-radius: 40px; box-shadow: 20px 20px 60px #beccd7, -5px -5px 20px #ffffff; text-align: center; }
+        .main-upload-area { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 24px; padding: 30px; cursor: pointer; transition: all 0.3s ease; margin-bottom: 25px; }
+        .main-upload-area:hover { border-color: var(--primary-blue); background: #f0f9ff; transform: scale(1.02); }
+        .upload-circle { width: 60px; height: 60px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px; }
+        .secondary-row { display: flex; align-items: center; justify-content: space-between; background: #f1f5f9; padding: 15px 20px; border-radius: 20px; margin-bottom: 12px; transition: 0.2s; }
+        .label-group { display: flex; align-items: center; gap: 12px; font-weight: 700; color: var(--navy-dark); }
+        .btn-attach { background: var(--navy-dark); color: white; border: none; padding: 8px 16px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .nav-arrow { width: 45px; height: 45px; border-radius: 15px; background: white; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="upload-overlay">
+        <div class="container-upload">
+            <h2 style="font-size: 24px; font-weight: 800; color: var(--navy-dark); margin-bottom: 8px;">Upload Ticket</h2>
+            <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 35px;">Securely upload your travel documents</p>
+    
+            <div class="main-upload-area">
+                <div class="upload-circle"><i class="fas fa-camera"></i></div>
+                <div style="font-weight: 800; color: var(--navy-dark);">Ticket Photo</div>
+                <div style="font-size: 12px; color: var(--text-gray);">Tap to capture or upload</div>
+            </div>
+    
+            <div class="secondary-row">
+                <div class="label-group"><i class="fas fa-id-card" style="color: var(--primary-blue);"></i><span>Passport</span></div>
+                <button class="btn-attach"><i class="fas fa-paperclip"></i> IMAGE</button>
+            </div>
+    
+            <div class="secondary-row">
+                <div class="label-group"><i class="fas fa-passport" style="color: var(--primary-blue);"></i><span>Visa</span></div>
+                <button class="btn-attach"><i class="fas fa-paperclip"></i> IMAGE</button>
+            </div>
+    
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 35px;">
+                <div class="nav-arrow" onclick="closeUpload()"><i class="fas fa-chevron-left"></i></div>
+                <div style="display: flex; gap: 6px;">
+                    <div style="width: 20px; height: 8px; border-radius: 10px; background: var(--primary-blue);"></div>
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1;"></div>
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1;"></div>
+                </div>
+                <div class="nav-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <section id="hero" class="hero">
+        <div>
+            <h1>WANDER</h1>
+            <h2>— WITHOUT —</h2>
+            <h3>BOUNDARIES</h3>
+            <div onclick="navigateTo('login')" class="btn-start">Begin Journey</div>
+        </div>
+    </section>
+
+    <section id="login">
+        <div class="collage-section">
+            <img src="https://i.postimg.cc/L4xbNJmq/1.jpg" class="collage-img img-tall">
+            <img src="https://i.postimg.cc/mrSwknDs/3.jpg" class="collage-img">
+            <img src="https://i.postimg.cc/LXNNCWKx/2.jpg" class="collage-img">
+            <img src="https://i.postimg.cc/8P4DNpdC/center.jpg" class="collage-img">
+            <img src="https://i.postimg.cc/wxknsW15/bus1.jpg" class="collage-img">
+            <img src="https://i.postimg.cc/85Sn7WNc/vacation.jpg" class="collage-img">
+            <img src="https://i.postimg.cc/8PSPTXqL/ship.jpg" class="collage-img">
+            <img src="https://i.postimg.cc/qvyN4433/fer.jpg" class="collage-img">
+            <img src="https://i.postimg.cc/85Sn7WNc/vacation.jpg" class="collage-img">
+        </div>
+        <div class="login-side">
+            <div class="wave-bg"></div>
+            <div class="login-card">
+                <div class="welcome-header"><h2>WELCOME</h2></div>
+                <div class="form-body">
+                    <label>EMAIL :</label>
+                    <input type="email" id="email" placeholder="username@gmail.com">
+                    <label>PASSWORD :</label>
+                    <input type="password" id="password" placeholder="********">
+                    <div style="text-align:center; margin:10px 0; font-weight:bold; color:#000;">OR</div>
+                    <div style="background:white; padding:10px; border-radius:5px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:600; color:#555; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <img src="https://i.postimg.cc/QtfkjWMp/google.png" style="width:20px; margin-right:10px;"> Continue with Google
+                    </div>
+                </div>
+            </div>
+            <button onclick="validateAndNavigate()" class="next-btn"><span>&gt;</span></button>
+        </div>
+    </section>
+
+    <section id="gateway" class="gateway-section">
+        <img src="https://i.postimg.cc/7LhmfkCP/bod1.jpg" alt="Summer Hat" class="decor-image">
+        <div class="gateway-container">
+            <div class="top-text">YOUR GATEWAY TO</div>
+            <div class="script-text">Unforgettable</div>
+            <div class="bottom-text">JOURNEYS....</div>
+            <div onclick="navigateTo('modes')" style="margin-top:20px; cursor:pointer; font-weight:bold;">PROCEED ></div>
+        </div>
+    </section>
+
+    <section id="modes" class="mode-section">
+        <div class="content-section">
+            <h1>Let's lay the<br>smoothest road!</h1>
+            <p>How would you like to provide your journey details?</p>
+            <div class="button-group">
+                <button class="action-btn" onclick="openUpload()"><i class="fas fa-camera"></i> PHOTO</button>
+                <button class="action-btn" onclick="navigateTo('decision')"><i class="fas fa-keyboard"></i> TEXT</button>
+            </div>
+        </div>
+        <div class="visual-section">
+            <div class="strip s-1"></div><div class="strip s-2"></div><div class="strip s-3"></div><div class="strip s-4"></div><div class="strip s-5"></div>
+            <div class="dot-dec dot-1"></div><div class="dot-dec dot-2"></div>
+        </div>
+    </section>
+
+    <section id="decision" class="decision-section">
+        <div class="decision-card">
+            <h2 style="font-family: 'Oswald'; font-size: 2rem; margin-bottom: 20px;">DO YOU WANT TO CHECK FLIGHT STATUS OR CHOOSE A NEW FLIGHT OPTION?</h2>
+            <div class="button-group" style="flex-direction: column; align-items: center; margin-top: 30px;">
+                <button class="action-btn" style="width: 100%; max-width: 400px; justify-content: center;" onclick="navigateTo('journey-form')">CHECK FLIGHT STATUS</button>
+                <div style="margin: 15px 0; font-weight: 800; color: #cbd5e1;">OR</div>
+                <button class="action-btn" style="width: 100%; max-width: 400px; justify-content: center; background: var(--primary-blue);" onclick="navigateTo('rebook-preference')">FLIGHT CANCELLED / CHOOSE NEW FLIGHT</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="rebook-preference" class="rebook-section">
+        <div class="main-card" style="max-width: 800px;">
+            <header><h1>FLIGHT PREFERENCES</h1></header>
+            <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Flight class (economy, business):</label><input type="text" class="form-input"></div>
+            <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Flight time preference:</label><input type="text" class="form-input"></div>
+            <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Price tier:</label><input type="text" class="form-input"></div>
+            <div class="col-form" style="margin-bottom: 30px;"><label class="form-label">Optional additional options (like refundable):</label><input type="text" class="form-input"></div>
+            <div style="text-align: right;"><button class="action-btn" onclick="navigateTo('journey-form')">CONTINUE <i class="fas fa-arrow-right"></i></button></div>
+        </div>
+    </section>
+
+    <section id="journey-form" class="journey-form-section">
+        <div class="main-card">
+            <header>
+                <h1>Fill the following details:</h1>
+                <div class="progress-bar"><div class="step-dot active" id="dot-1-f"></div><div class="step-dot" id="dot-2-f"></div></div>
+            </header>
+            <div class="form-page active" id="f-page-1">
+                <div class="section-badge">Passenger Information</div>
+                <div class="row-form"><div class="col-form"><label class="form-label">Name:</label><input type="text" class="form-input"></div></div>
+                <div class="row-form"><div class="col-form"><label class="form-label">Date of Birth:</label><input type="text" class="form-input"></div></div>
+                <div class="row-form">
+                    <div class="col-form"><label class="form-label">Phone:</label><input type="tel" class="form-input"></div>
+                    <div class="col-form"><label class="form-label">Email:</label><input type="email" class="form-input"></div>
+                </div>
+                <div class="section-badge" style="margin-top: 30px;">Travel Information</div>
+                <div class="travel-grid-form">
+                    <div class="grid-item-form"><label class="form-label">Departure city:</label><input type="text" class="form-input"></div>
+                    <div class="grid-item-form"><label class="form-label">Destination city:</label><input type="text" class="form-input"></div>
+                    <div class="grid-item-form"><label class="form-label">Departure airport:</label><input type="text" class="form-input"></div>
+                    <div class="grid-item-form"><label class="form-label">Destination airport::</label><input type="text" class="form-input"></div>
+                    <div class="grid-item-form"><label class="form-label">Departure date:</label><input type="text" class="form-input"></div>
+                    <div class="grid-item-form"><label class="form-label">Arrival date:</label><input type="text" class="form-input"></div>
+                </div>
+            </div>
+            <div class="form-page" id="f-page-2">
+                <div class="split-layout-form">
+                    <div class="side-form">
+                        <div class="section-badge">Flight Preferences</div>
+                        <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Class of travel:</label><input type="text" class="form-input"></div>
+                        <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Airline Preference:</label><input type="text" class="form-input"></div>
+                        <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Non stop or connecting flights:</label><input type="text" class="form-input"></div>
+                        <div class="section-badge" style="margin-top: 20px;">Documents</div>
+                        <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Passport number:</label><input type="text" class="form-input"></div>
+                        <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Visa number:</label><input type="text" class="form-input"></div>
+                        <div class="col-form"><label class="form-label">Government issued ID for domestic flights:</label><input type="text" class="form-input"></div>
+                    </div>
+                    <div class="side-form">
+                        <div class="section-badge">Additional Needs</div>
+                        <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Special assistance:</label><input type="text" class="form-input"></div>
+                        <div class="col-form" style="margin-bottom: 20px;"><label class="form-label">Meal preferences:</label><input type="text" class="form-input"></div>
+                        <div class="col-form"><label class="form-label">Extra baggage requirements:</label><input type="text" class="form-input" style="width: 200px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-form">
+                <button class="nav-btn-form" id="f-prevBtn" onclick="formMove(1)" style="visibility: hidden;"><i class="fa-solid fa-arrow-left"></i></button>
+                <button class="nav-btn-form" id="f-nextBtn" onclick="formMove(2)"><i class="fa-solid fa-arrow-right" id="f-nextIcon"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function openUpload() { document.getElementById('upload-overlay').style.display = 'flex'; }
+        function closeUpload() { document.getElementById('upload-overlay').style.display = 'none'; }
+        function navigateTo(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+
+        function validateAndNavigate() {
+            const e = document.getElementById('email').value;
+            if(e.trim()==="") alert("Please enter Email to continue.");
+            else navigateTo('gateway');
+        }
+
+        function formMove(step) {
+            const p1 = document.getElementById('f-page-1');
+            const p2 = document.getElementById('f-page-2');
+            const d1 = document.getElementById('dot-1-f');
+            const d2 = document.getElementById('dot-2-f');
+            const prev = document.getElementById('f-prevBtn');
+            const icon = document.getElementById('f-nextIcon');
+
+            if(step === 2) {
+                p1.classList.remove('active'); p2.classList.add('active');
+                d1.classList.remove('active'); d2.classList.add('active');
+                prev.style.visibility = 'visible'; icon.className = 'fa-solid fa-check';
+            } else {
+                p1.classList.add('active'); p2.classList.remove('active');
+                d1.classList.add('active'); d2.classList.remove('active');
+                prev.style.visibility = 'hidden'; icon.className = 'fa-solid fa-arrow-right';
+            }
+        }
+
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active-step'); });
+        }, { threshold: 0.5 });
+        sections.forEach(s => observer.observe(s));
+       
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wander AI | Email Sent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary-blue: #0ea5e9; --navy: #1e293b; }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: white; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+
+        .container { text-align: center; position: relative; }
+
+        /* Flying Animation */
+        .plane-wrapper {
+            font-size: 60px; color: var(--primary-blue);
+            margin-bottom: 30px; display: inline-block;
+            animation: flyAway 2s infinite ease-in-out;
+        }
+
+        @keyframes flyAway {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            50% { transform: translate(100px, -100px) rotate(-10deg); opacity: 0.5; }
+            51% { opacity: 0; transform: translate(-100px, 100px); }
+            100% { transform: translate(0, 0); opacity: 1; }
+        }
+
+        h2 { font-family: 'Oswald'; font-size: 32px; color: var(--navy); margin: 0; }
+        .divider { width: 40px; height: 4px; background: var(--primary-blue); margin: 20px auto; border-radius: 2px; }
+        p { color: #64748b; max-width: 300px; margin: 0 auto 40px; line-height: 1.6; }
+
+        .btn-report {
+            background: #f0f9ff; color: var(--primary-blue); border: 2px solid var(--primary-blue);
+            padding: 16px 35px; border-radius: 20px; font-weight: 800; cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-report:hover { background: var(--primary-blue); color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="plane-wrapper">
+            <i class="fas fa-paper-plane"></i>
+        </div>
+        <h2>Email Sent!</h2>
+        <div class="divider"></div>
+        <p>A confirmation itinerary has been dispatched to your registered email address.</p>
+        <button class="btn-report" onclick="window.location.href='report.html'">
+            VIEW TRAVEL REPORT <i class="fas fa-file-invoice"></i>
+        </button>
+    </div>
+</body>
+</html>

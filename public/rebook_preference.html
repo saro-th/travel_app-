@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wander | Rebook Preferences</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0ea5e9;
+            --navy: #1e293b;
+            --bg-light: #f0f9ff;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background-color: var(--bg-light); 
+            background-image: radial-gradient(#bae6fd 1.5px, transparent 1.5px); 
+            background-size: 30px 30px; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow: hidden;
+        }
+
+        .main-card { 
+            width: 90%; 
+            max-width: 800px; 
+            background: var(--glass); 
+            backdrop-filter: blur(12px); 
+            padding: 50px; 
+            border-radius: 40px; 
+            box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.15); 
+            border: 1px solid rgba(255, 255, 255, 0.7); 
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header h1 { 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 2.5rem; 
+            color: var(--navy); 
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .col-form { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            margin-bottom: 25px; 
+        }
+
+        .form-label { 
+            font-weight: 700; 
+            font-size: 0.9rem; 
+            color: var(--navy); 
+            margin-left: 5px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input { 
+            width: 100%; 
+            padding: 15px 20px; 
+            border-radius: 18px; 
+            border: 2px solid #e2e8f0; 
+            background: white; 
+            outline: none; 
+            font-weight: 600;
+            transition: 0.3s; 
+        }
+
+        .form-input:focus { 
+            border-color: var(--primary-blue); 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.1);
+        }
+
+        .action-btn { 
+            background-color: var(--navy); 
+            color: white; 
+            border: none; 
+            padding: 18px 45px; 
+            border-radius: 20px; 
+            font-size: 14px; 
+            font-weight: 800; 
+            letter-spacing: 2px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 12px; 
+            box-shadow: 0 10px 20px rgba(30, 41, 59, 0.2); 
+        }
+
+        .action-btn:hover { 
+            background-color: var(--primary-blue); 
+            transform: scale(1.05); 
+        }
+
+        .footer {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-card">
+        <header>
+            <h1>Flight Preferences</h1>
+        </header>
+<div class="col-form">
+    <label class="form-label">Flight class:</label>
+    <input type="text" id="pref-class" class="form-input" placeholder="e.g. Business Class">
+</div>
+
+<div class="col-form">
+    <label class="form-label">Flight time preference:</label>
+    <input type="text" id="pref-time" class="form-input" placeholder="e.g. Morning">
+</div>
+
+<div class="col-form">
+    <label class="form-label">Price tier:</label>
+    <input type="text" id="pref-price" class="form-input" placeholder="e.g. Mid-range">
+</div>
+
+<div class="col-form">
+    <label class="form-label">Optional additional options:</label>
+    <input type="text" id="pref-options" class="form-input" placeholder="e.g. Refundable">
+</div>
+
+<div class="footer">
+    <button class="action-btn" onclick="savePreferences()">
+        CONTINUE <i class="fas fa-arrow-right"></i>
+    </button>
+</div>
+
+<script>
+    function savePreferences() {
+        // Grab values
+        const fClass = document.getElementById('pref-class').value;
+        const fTime = document.getElementById('pref-time').value;
+        const fPrice = document.getElementById('pref-price').value;
+        const fOptions = document.getElementById('pref-options').value;
+
+        // Save to localStorage
+        localStorage.setItem('flightClass', fClass);
+        localStorage.setItem('timePreference', fTime);
+        localStorage.setItem('priceTier', fPrice);
+        localStorage.setItem('additionalOptions', fOptions);
+
+        // Move to the next page
+        window.location.href = 'journey_form.html';
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wander | Travel Insights</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0ea5e9;
+            --navy: #1e293b;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://i.postimg.cc/CMHynWSJ/gg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .main-card {
+            width: 100%;
+            max-width: 850px;
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 35px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(14, 165, 233, 0.1);
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-family: 'Oswald';
+            font-size: 28px;
+            color: var(--navy);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status-pill {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 800;
+            background: var(--white);
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+            text-transform: uppercase;
+        }
+
+        /* 2. IMPROVED REPORT DISPLAY FOR AI CONTENT */
+        #report-display {
+            background: var(--white);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 25px;
+            padding: 35px;
+            min-height: 400px;
+            color: var(--navy);
+            line-height: 1.6;
+            font-size: 16px;
+            margin-bottom: 35px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        /* 3. STYLING THE MARKDOWN OUTPUT */
+        #ai-text-target h1, #ai-text-target h2, #ai-text-target h3 { margin-top: 20px; margin-bottom: 10px; color: var(--primary-blue); }
+        #ai-text-target p { margin-bottom: 15px; }
+        #ai-text-target ul { margin-left: 20px; margin-bottom: 15px; }
+        #ai-text-target strong { color: var(--navy); font-weight: 800; }
+
+        .action-group { display: flex; gap: 15px; justify-content: center; }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 18px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+        }
+
+        .btn-secondary { background: #f1f5f9; color: var(--navy); }
+        .btn-primary { 
+            background: var(--primary-blue); 
+            color: var(--white); 
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3); 
+        }
+
+        .btn:hover { transform: translateY(-5px); filter: brightness(1.1); }
+
+        .loading-bar { height: 14px; background: rgba(14, 165, 233, 0.1); margin-bottom: 12px; border-radius: 7px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 50% { opacity: 0.4; } }
+    </style>
+</head>
+<body>
+
+    <div class="main-card">
+        <div class="header">
+            <div>
+                <p style="font-size: 10px; font-weight: 800; color: var(--primary-blue); margin-bottom: 4px;">WANDER AI GENERATED</p>
+                <h1>Travel Insights</h1>
+            </div>
+            <div id="status-indicator" class="status-pill">
+                <i class="fas fa-satellite fa-spin"></i> Processing Request
+            </div>
+        </div>
+
+        <div id="report-display">
+            <div id="skeleton-container">
+                <div class="loading-bar" style="width: 85%;"></div>
+                <div class="loading-bar" style="width: 100%;"></div>
+                <div class="loading-bar" style="width: 60%;"></div>
+                <div class="loading-bar" style="width: 90%;"></div>
+            </div>
+            <div id="ai-text-target"></div>
+        </div>
+
+        <div class="action-group">
+            <button class="btn btn-secondary" onclick="window.print()">
+                <i class="fas fa-print"></i> SAVE PDF
+            </button>
+            <a href="thank_you.html" class="btn btn-primary">
+                FINISH JOURNEY <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let pollTask;
+
+        async function fetchAIUpdates() {
+            try {
+                // Hits your server.js port 3004
+                const response = await fetch('/api/get-report');
+                const textData = await response.text();
+
+                // Logic to detect if AI is still working
+                const loadingStates = ["Waiting for AI", "compiling your report", "Scanning ticket"];
+                const stillLoading = loadingStates.some(state => textData.includes(state));
+
+                // 4. IMPROVED DATA CHECK: If we have real data and no loading strings
+                if (textData && textData.trim().length > 0 && !stillLoading) {
+                    showFinalReport(textData);
+                    clearInterval(pollTask);
+                }
+            } catch (err) {
+                console.error("Dashboard Polling Error:", err);
+            }
+        }
+
+        function showFinalReport(content) {
+            document.getElementById('skeleton-container').style.display = 'none';
+            
+            // 5. PARSE MARKDOWN: Converts AI bold/headers into beautiful HTML
+            document.getElementById('ai-text-target').innerHTML = marked.parse(content);
+
+            const status = document.getElementById('status-indicator');
+            status.innerHTML = '<i class="fas fa-check-circle"></i> Analysis Ready';
+            status.style.background = '#dcfce7';
+            status.style.color = '#15803d';
+            status.style.borderColor = '#22c55e';
+        }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('history') === 'true') {
+                const historyData = localStorage.getItem('tempReport');
+                if (historyData) {
+                    showFinalReport(historyData);
+                    document.getElementById('status-indicator').innerHTML = 'ARCHIVED REPORT';
+                }
+            } else {
+                pollTask = setInterval(fetchAIUpdates, 3000);
+                fetchAIUpdates();
+            }
+        };
+    </script>
+</body>
+</html>

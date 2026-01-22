@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wander | Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #f0f9ff; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+        .main-card { width: 90%; max-width: 900px; background: white; padding: 50px; border-radius: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .badge { background: #1e293b; color: white; padding: 8px 20px; border-radius: 50px; font-family: 'Oswald'; text-transform: uppercase; font-size: 11px; display: inline-block; margin-bottom: 20px; }
+        .form-page { display: none; }
+        .form-page.active { display: block; }
+        .form-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 15px; outline: none; box-sizing: border-box; }
+        .form-input:focus { border-color: #0ea5e9; }
+        .footer { display: flex; justify-content: space-between; margin-top: 30px; }
+        .btn { width: 50px; height: 50px; border-radius: 15px; border: 1px solid #ddd; background: white; cursor: pointer; }
+        .input-error { border-color: #ef4444 !important; background-color: #fef2f2; }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <h1>Fill the following details:</h1>
+        
+        <div class="form-page active" id="p1">
+            <div class="badge">Passenger Information</div>
+            <input type="text" id="val-name" class="form-input" placeholder="Name">
+            <input type="email" id="val-email" class="form-input" placeholder="Email">
+            
+            <div class="badge">Route Details</div>
+            <div style="display: flex; gap: 15px;">
+                <input type="text" id="val-dep" class="form-input" placeholder="Departure City">
+                <input type="text" id="val-dest" class="form-input" placeholder="Destination City">
+            </div>
+        </div>
+
+        <div class="form-page" id="p2">
+            <div class="badge">Travel Documents</div>
+            <input type="text" id="val-id" class="form-input" placeholder="Government ID (For Local Travel)">
+            <input type="text" id="val-passport" class="form-input" placeholder="Passport Number (Optional)">
+            <input type="text" id="val-visa" class="form-input" placeholder="Visa Number (Optional)">
+            
+            <div class="badge">Travel & Emergency Needs</div>
+            <input type="text" id="val-class" class="form-input" placeholder="Class of Travel">
+            <input type="text" id="val-assistance" class="form-input" placeholder="Special Assistance">
+            <input type="text" id="val-crisis" class="form-input" placeholder="Crisis Type (e.g. Medical, Evacuation)">
+            <input type="text" id="val-other" class="form-input" placeholder="Other Needs">
+        </div>
+
+        <div class="footer">
+            <button class="btn" onclick="move(1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="btn" onclick="move(2)"><i class="fas fa-chevron-right" id="next-i"></i></button>
+        </div>
+    </div>
+
+    <script>
+        function move(s) {
+            const p1 = document.getElementById('p1');
+            const p2 = document.getElementById('p2');
+            const icon = document.getElementById('next-i');
+
+            if(s === 2) {
+                if(!p2.classList.contains('active')) {
+                    const name = document.getElementById('val-name');
+                    const email = document.getElementById('val-email');
+                    const dep = document.getElementById('val-dep');
+                    const dest = document.getElementById('val-dest');
+
+                    let isValid = true;
+                    [name, email, dep, dest].forEach(el => {
+                        if(el.value.trim() === "") {
+                            el.classList.add('input-error');
+                            isValid = false;
+                        } else { el.classList.remove('input-error'); }
+                    });
+
+                    if(!isValid) {
+                        alert("Please fill in Name, Email, and Route details.");
+                        return;
+                    }
+
+                    localStorage.setItem('departure', dep.value);
+                    localStorage.setItem('destination', dest.value);
+                    localStorage.setItem('passengerName', name.value);
+
+                    p1.classList.remove('active'); 
+                    p2.classList.add('active'); 
+                    icon.className = 'fas fa-check';
+                } 
+                else {
+                    const govId = document.getElementById('val-id');
+                    if(govId.value.trim() === "") {
+                        govId.classList.add('input-error');
+                        alert("Government ID is required.");
+                        return;
+                    }
+
+                    localStorage.setItem('govID', govId.value);
+
+                    // PREPARE ALL DATA FOR DATABASE (Updated with new fields)
+                    const journeyData = {
+                        inputMethod: localStorage.getItem('inputMethod'),
+                        flightClass: localStorage.getItem('flightClass'),
+                        timePreference: localStorage.getItem('timePreference'),
+                        priceTier: localStorage.getItem('priceTier'),
+                        additionalOptions: localStorage.getItem('additionalOptions'),
+                        name: document.getElementById('val-name').value,
+                        email: document.getElementById('val-email').value,
+                        departure: document.getElementById('val-dep').value,
+                        destination: document.getElementById('val-dest').value,
+                        govID: govId.value,
+                        passport: document.getElementById('val-passport').value,
+                        visa: document.getElementById('val-visa').value,
+                        travelClass: document.getElementById('val-class').value,
+                        specialAssistance: document.getElementById('val-assistance').value,
+                        // MAPPING NEW FIELDS
+                        crisisType: document.getElementById('val-crisis').value,
+                        otherNeeds: document.getElementById('val-other').value
+                    };
+
+                    fetch('/api/save-journey', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(journeyData)
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        window.location.href = 'summary.html';
+                    })
+                    .catch(err => {
+                        console.error('Fetch error:', err);
+                        alert("Error saving data. Is your server running?");
+                    });
+                }
+            } else {
+                p1.classList.add('active'); 
+                p2.classList.remove('active'); 
+                icon.className = 'fas fa-chevron-right';
+            }
+        }
+    </script>
+</body>
+</html>

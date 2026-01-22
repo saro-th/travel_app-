@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wander | Mode Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0ea5e9;
+            --navy: #1e293b;
+            --bg-light: #f0f9ff;
+            --text-gray: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { height: 100vh; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .mode-section { 
+            height: 100vh; 
+            width: 100vw; 
+            display: flex; 
+            background-color: var(--bg-light); 
+            background-image: radial-gradient(#bae6fd 1px, transparent 1px); 
+            background-size: 30px 30px; 
+        }
+
+        .content-section { 
+            width: 45%; 
+            padding: 80px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            z-index: 10; 
+        }
+
+        .content-section h1 { 
+            font-size: 58px; 
+            font-weight: 800; 
+            line-height: 1.1; 
+            margin-bottom: 20px; 
+            letter-spacing: -2px; 
+            color: var(--navy); 
+        }
+
+        .content-section p { 
+            font-size: 18px; 
+            color: var(--text-gray); 
+            margin-bottom: 40px; 
+            font-weight: 500; 
+        }
+
+        .button-group { display: flex; gap: 20px; }
+
+        .action-btn { 
+            background-color: var(--navy); 
+            color: white; 
+            border: none; 
+            padding: 18px 45px; 
+            border-radius: 20px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            box-shadow: 0 10px 20px rgba(30, 41, 59, 0.2); 
+        }
+
+        .action-btn:hover { 
+            transform: translateY(-5px); 
+            background-color: var(--primary-blue); 
+            box-shadow: 0 15px 30px rgba(14, 165, 233, 0.4); 
+        }
+
+        .visual-section { width: 55%; height: 100%; display: flex; gap: 15px; padding: 40px; align-items: flex-start; }
+        .strip { flex: 1; background-size: cover; background-position: center; border-radius: 50px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); filter: grayscale(20%); }
+        .strip:hover { flex: 1.5; filter: grayscale(0%); border-radius: 30px; }
+        
+        .s-1 { height: 60%; background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=400'); margin-top: 40px; }
+        .s-2 { height: 85%; background-image: url('https://images.unsplash.com/photo-1499678329028-101435549a4e?q=80&w=400'); }
+        .s-3 { height: 50%; background-image: url('https://images.unsplash.com/photo-1500835556837-99ac94a94552?q=80&w=400'); margin-top: 80px;}
+        .s-4 { height: 95%; background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=400'); }
+        .s-5 { height: 70%; background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=400'); margin-top: 20px;}
+
+        .dot-dec { position: absolute; background-color: var(--primary-blue); border-radius: 50%; z-index: 20; opacity: 0.6; }
+        .dot-1 { width: 30px; height: 30px; bottom: 10%; left: 42%; }
+        .dot-2 { width: 15px; height: 15px; top: 15%; right: 5%; }
+    </style>
+</head>
+<body>
+
+    <section class="mode-section">
+        <div class="content-section">
+            <h1>Let's lay the<br>smoothest road!</h1>
+            <p>How would you like to provide your journey details?</p>
+            <div class="button-group">
+                <button class="action-btn" onclick="saveMethod('Photo')">
+                    <i class="fas fa-camera"></i> PHOTO
+                </button>
+                <button class="action-btn" onclick="saveMethod('Text')">
+                    <i class="fas fa-keyboard"></i> TEXT
+                </button>
+            </div>
+        </div>
+
+        <div class="visual-section">
+            <div class="strip s-1"></div>
+            <div class="strip s-2"></div>
+            <div class="strip s-3"></div>
+            <div class="strip s-4"></div>
+            <div class="strip s-5"></div>
+            <div class="dot-dec dot-1"></div>
+            <div class="dot-dec dot-2"></div>
+        </div>
+    </section>
+    
+    <script>
+        function saveMethod(method) {
+            // Store the user's choice
+            localStorage.setItem('inputMethod', method);
+
+            if(method === 'Photo') {
+                // Redirect to the separate upload screen we created earlier
+                window.location.href = 'upload.html';
+            } else {
+                // Redirect to the manual decision flow
+                window.location.href = 'decision.html'; 
+            }
+        }
+        // Example: When the user clicks the "Text" option
+const handleTextMode = () => {
+    const data = {
+        inputMethod: "Text", // Explicitly define the mode here
+        // ... rest of your data (name, email, etc.)
+    };
+    
+    // Send this to your server.js
+    fetch('/api/save-travel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+};
+    </script>
+</body>
+</html>

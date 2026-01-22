@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wander AI | Processing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0ea5e9;
+            --light-sky: #f0f9ff;
+            --soft-blue: #e0f2fe;
+            --navy: #1e293b;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            /* Light Blue Gradient Theme */
+            background: radial-gradient(circle at top right, #ffffff, var(--soft-blue));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .processing-container {
+            text-align: center;
+            max-width: 500px;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(14, 165, 233, 0.1);
+        }
+
+        .ai-badge {
+            background: var(--primary-blue);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            display: inline-block;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .ai-pulse-container {
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .ai-pulse {
+            width: 110px;
+            height: 110px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Enhanced Pulse Rings */
+        .ai-pulse::after, .ai-pulse::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            z-index: -1;
+            opacity: 0.6;
+            animation: pulse-rings 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        .ai-pulse::before {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes pulse-rings {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h2 {
+            color: var(--navy);
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .status-box {
+            height: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-wrapper {
+            display: flex;
+            flex-direction: column;
+            animation: slide-status 8s infinite steps(4);
+        }
+
+        .status-text {
+            height: 30px;
+            line-height: 30px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 15px;
+            text-transform: capitalize;
+        }
+
+        @keyframes slide-status {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); }
+        }
+
+        /* Loading Dots Animation */
+        .dots::after {
+            content: '';
+            animation: dot-loading 1.5s infinite;
+        }
+
+        @keyframes dot-loading {
+            0% { content: ''; }
+            33% { content: '.'; }
+            66% { content: '..'; }
+            100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="processing-container">
+        <div class="ai-badge">WANDER AI AGENT</div>
+        
+        <div class="ai-pulse-container">
+            <div class="ai-pulse">
+                <i class="fas fa-microchip" style="color: white; font-size: 45px;"></i>
+            </div>
+        </div>
+
+        <h2>Processing Your Request<span class="dots"></span></h2>
+
+        <div class="status-box">
+            <div class="status-wrapper">
+                <div class="status-text">Analyzing crisis impact...</div>
+                <div class="status-text">Searching real-time flights...</div>
+                <div class="status-text">Optimizing travel routes...</div>
+                <div class="status-text">Finalizing your journey...</div>
+            </div>
+        </div>
+        
+        <p style="color: #64748b; font-size: 13px; margin-top: 25px; line-height: 1.5; opacity: 0.8;">
+            Synchronizing data with secure airline authorities.
+        </p>
+    </div>
+
+    <script>
+        // Automatic redirect after the status loop completes (4s or more)
+        setTimeout(() => {
+            window.location.href='success_email.html'; 
+        }, 5000);
+    </script>
+
+</body>
+</html>

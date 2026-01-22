@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wander | Begin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100vh; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .hero {
+            height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; color: white;
+            background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.4)), url("https://i.postimg.cc/MTxKWB84/twa.jpg") no-repeat center / cover;
+        }
+        .hero h1 { font-size: clamp(60px, 10vw, 100px); font-weight: 800; letter-spacing: -2px; margin: 0; }
+        .hero h2 { font-size: 16px; letter-spacing: 12px; text-transform: uppercase; margin: 20px 0; font-weight: 300; }
+        .hero h3 { font-size: 40px; font-weight: 800; letter-spacing: 5px; margin-bottom: 30px; }
+        .btn-start {
+            display: inline-block; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3); color: white; padding: 16px 45px;
+            border-radius: 100px; text-decoration: none; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2px; transition: 0.3s; cursor: pointer;
+        }
+        .btn-start:hover { background: #fff; color: #000; transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div>
+            <h1>WANDER</h1>
+            <h2>— WITHOUT —</h2>
+            <h3>BOUNDARIES</h3>
+            <div onclick="window.location.href='login.html'" class="btn-start">Begin Journey</div>
+        </div>
+    </section>
+</body>
+</html>
