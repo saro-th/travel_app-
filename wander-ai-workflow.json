@@ -1,0 +1,718 @@
+{
+  "name": "crisis agent copy",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        288
+      ],
+      "id": "169d6475-3052-496b-91d3-89eb21858be4",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "AiGtEAMugc1r4BET",
+          "name": "Groq account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2208,
+        320
+      ],
+      "id": "61f8c40f-1734-4301-8a27-a53e0589eaff",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "AiGtEAMugc1r4BET",
+          "name": "Groq account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        576
+      ],
+      "id": "699f8267-0c33-4bd8-b0e8-1ab20e157efa",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "AiGtEAMugc1r4BET",
+          "name": "Groq account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "fromEmail": "sar1992007@gmail.com",
+        "toEmail": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "your travel solution",
+        "message": "={{ $json.output }}\nsafe travels",
+        "responseType": "freeText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2976,
+        320
+      ],
+      "id": "a3099732-7ae1-4dbd-885a-55cd05b82179",
+      "name": "Send email",
+      "webhookId": "7117598e-2d96-46ec-91c2-6b464b039594",
+      "credentials": {
+        "smtp": {
+          "id": "vv96SbS5cORjgDwP",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        288
+      ],
+      "id": "86edfbf4-4a35-4f6b-85a7-a5273834c513",
+      "name": "Groq Chat Model3",
+      "credentials": {
+        "groqApi": {
+          "id": "AiGtEAMugc1r4BET",
+          "name": "Groq account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5eacbbb9-6682-4ad6-a8d3-3086c3abef25",
+              "name": "input_type ",
+              "value": "={{ $json.body.input_type }}",
+              "type": "string"
+            },
+            {
+              "id": "cababd9f-065f-4bf1-be03-9a1ab5d89fed",
+              "name": "user_input",
+              "value": "={{ $json.body }}",
+              "type": "string"
+            },
+            {
+              "id": "57004b0c-dd63-44ca-8ff2-fccb4ad34366",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        80
+      ],
+      "id": "99dbee64-5090-45fe-b956-84617297780a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['input_type '] }}",
+                    "rightValue": "Text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "aec749d4-beb9-40ee-add5-a52a418cf82a"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d115555f-b17d-46ea-baf7-6aab49d0d09e",
+                    "leftValue": "={{ $json['input_type '] }}",
+                    "rightValue": "Photo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        80
+      ],
+      "id": "7ab16613-44b2-40df-93a9-ae8ed6b583d8",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Crisis Analysis Agent.\nYou assess risk and context without providing solutions.\n\nConstraints:\n- Do NOT give step-by-step instructions.\n- Do NOT provide medical, legal, or emergency directives.\n- Clearly distinguish facts from uncertainty.\n- If risk to life is possible, mark it explicitly.\n\nYour role is assessment, not action.\n{{ $json.search_parameters }}{{ $json.search_information.showing_results_for }}{{ $json.search_information }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1504,
+        160
+      ],
+      "id": "5cd428c6-d16f-4817-bd30-5eaf5a8f4167",
+      "name": "crisis agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are the Strategic Logistics & Recovery Planner for a travel management system.\n\n### INPUT CONTEXT:\nYou will receive a \"Crisis Report\" containing a specific travel disruption (e.g., flight cancellation, strike, weather event) and a directive on what to solve.\n\n### YOUR OBJECTIVE:\nGenerate exactly 3 distinct alternative travel options to overcome the reported crisis. You are NOT deciding the final plan; you are providing options for the user to choose from.\n\n### GENERATION RULES:\n1. **Option 1 (Speed):** The fastest possible route/method, regardless of cost.\n2. **Option 2 (Budget):** The most cost-effective solution that is still safe.\n3. **Option 3 (Strategic/Comfort):** A balanced option that prioritizes comfort or safety (e.g., a train instead of a flight during a storm, or a hotel stay to wait it out).\n\n### CRITICAL CONSTRAINTS:\n- You must strictly adhere to the \"locations_to_avoid\" provided in the input.\n- If the instruction says \"Find accommodation,\" generate hotel options. If it says \"Find transport,\" generate travel routes.\n\n### OUTPUT FORMAT:\nReturn a valid JSON object containing an array of options. Do not include markdown.\n\n{\n  \"crisis_context_received\": \"Brief recap of the issue (e.g., 'Avoid LHR due to fog')\",\n  \"alternatives\": [\n    {\n      \"option_id\": \"A\",\n      \"type\": \"Speed\",\n      \"title\": \"Short headline (e.g., 'Direct Train via Eurostar')\",\n      \"description\": \"Detailed route or plan description.\",\n      \"estimated_cost\": \"Estimate in USD (e.g., '$350')\",\n      \"estimated_duration\": \"Time duration (e.g., '4 hours')\",\n      \"risk_factor\": \"Low\" | \"Medium\" | \"High\",\n      \"pros\": \"Why is this good?\",\n      \"cons\": \"What is the downside?\"\n    },\n    {\n      \"option_id\": \"B\",\n      \"type\": \"Budget\",\n      ... (same structure)\n    },\n    {\n      \"option_id\": \"C\",\n      \"type\": \"Strategic\",\n      ... (same structure)\n    }\n  ]\n}{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1872,
+        160
+      ],
+      "id": "22ce971c-52f5-411a-9f0b-421b12e45f0e",
+      "name": "alternate agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Safety Optimization Agent.\nYou synthesize previous agent outputs into a single, accurate response draft.\n{{ $json.output }}\nRules:\n- Preserve uncertainty.\n- Never exaggerate certainty.\n- If information is insufficient, say so clearly.\n- Avoid alarming language unless risk is explicit.\n- Use calm, neutral tone.\n\nDo NOT format for UI yet.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2192,
+        160
+      ],
+      "id": "637891e8-bf22-4090-9a00-78c7ff5406c2",
+      "name": "optimization agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Professional Travel Concierge. Write a helpful, reassuring email to the client based on the \"Winning Option\" selected by the system.\n\n### INPUT DATA:\n- Crisis Summary (from context)\n- Selected Option Details\n- Decision Rationale\n\n### INSTRUCTIONS:\n- Subject Line: Urgent: [Crisis Name] - New Travel Plan Proposed\n- Opening: Acknowledge the disruption (be empathetic).\n- The Solution: Clearly present the selected option and explaining WHY it was chosen (the rationale).\n- Call to Action: Ask them to reply \"YES\" to proceed.\n- Tone: Professional, calm, and solution-oriented.\n\nIMPORTANT: Do not output JSON. Output the raw Email Body text only.{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2608,
+        320
+      ],
+      "id": "01499534-7196-4ed8-b90f-bde7a72236c1",
+      "name": "email assistant"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "travel-app",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -32,
+        80
+      ],
+      "id": "522c4082-bfa1-4905-a338-883719dba4ec",
+      "name": "Webhook",
+      "webhookId": "34dee31b-22d6-4e3c-8b2c-9361472be1e6",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "user_input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        368
+      ],
+      "id": "6933a9cb-2263-4a7c-8e97-eac6c43c6e12",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {
+          "maxTokensToSample": 4096
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        912,
+        480
+      ],
+      "id": "f9be8b74-b1c0-44b6-bbe2-e43dac5376e9",
+      "name": "Groq Chat Model5",
+      "credentials": {
+        "groqApi": {
+          "id": "AiGtEAMugc1r4BET",
+          "name": "Groq account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3004/api/n8n-callback",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "report",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2944,
+        64
+      ],
+      "id": "f1d75e50-4be2-4ba5-b1d7-b3682f8f2df3",
+      "name": "HTTP Request1",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2688,
+        -32
+      ],
+      "id": "be2c70d0-9627-4ec1-be65-7abd676dcae8",
+      "name": "Groq Chat Model6",
+      "credentials": {
+        "groqApi": {
+          "id": "AiGtEAMugc1r4BET",
+          "name": "Groq account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a UI Formatting Agent.{{ $json.output }}\nYour job is to present information clearly for a crisis response dashboard.\nuse emojis \nspecify the risk level and give reasurance\n\nRules:\n- Use headings, bullet points, and spacing.\n- Highlight uncertainty visually.\n- Do NOT add content.\n- Do NOT dramatize.\n- Keep language plain and readable.\n\nAssume this will be shown to stressed users.\n ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2608,
+        64
+      ],
+      "id": "a8dadcda-ccd7-4c1a-8384-6d79223c780d",
+      "name": "report agent"
+    },
+    {
+      "parameters": {
+        "url": "https://serpapi.com/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "=99b6d4b83ed8344cccffdcc2f046fa0059ee35dd019f5831aed105df3afbcb40"
+            },
+            {
+              "name": "engine",
+              "value": "=google"
+            },
+            {
+              "name": "q",
+              "value": "=current travel safety in {{ $json.output }}\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1248,
+        144
+      ],
+      "id": "fe25954b-ab4c-42fa-a172-b2b70ecd67e2",
+      "name": "real data"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Do not pass the image_base64 string directly into a standard \"Chat\" node or an Agent node's text prompt. Instead, you must use the specialized Analyze Image (Gemini) node which is designed to handle high-resolution files properly.\nYou are a Context Verification Agent.\nYou analyze provided documents or extracted text.\n\nRules:\n- Only summarize what is explicitly present.\n- Do not infer intent or cause.\n- If the document is unclear or incomplete, say so.\n- Never overwrite user-provided facts.\n\nYour job is accuracy, not helpfulness.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        912,
+        352
+      ],
+      "id": "1780a237-3fef-4794-a5ff-8a634b434e0b",
+      "name": "image agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Crisis Intake Agent.{{ $json.user_input }}\n\nSTRICT RULES:\n- Output JSON ONLY.\n- No explanations, no commentary, no markdown.\n- Do not address the user.\n- Do not infer intent.\n- Do not classify as non-crisis unless explicitly stated.\n- Use ONLY the schema below.\n- If something is unclear, mark it as \"unknown\".\n\nTASK:\nNormalize the user input exactly as provided.\n\nSCHEMA (must match exactly):\n{ \"name\":\"\",\n  \"crisis_type\": \"\",\n  \"summary\": \"\",\n  \"explicit_details\": {},\n  \"missing_information\": [],\n  \"ambiguities\": [],\n  \"urgency_level\": \"low | medium | high | unknown\"\n}\nDo not leave required fields empty. Use \"unknown\" or a neutral explanation instead.\nABSOLUTE PROHIBITIONS:\n- Do NOT ask the user questions.\n- Do NOT include requests or suggestions.\n- Do NOT mention examples of crises unless explicitly stated by the user.\n- Do NOT use words like \"please\", \"should\", or \"provide\".\n- Do NOT include instructional or guiding language.\n\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        784,
+        -160
+      ],
+      "id": "4c065aa1-bd7b-43c9-8ac9-fdf734e80602",
+      "name": "text agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        704,
+        -64
+      ],
+      "id": "b1387d23-277e-44d3-aba9-529a7d3b4b4f",
+      "name": "Groq Chat Model4",
+      "credentials": {
+        "groqApi": {
+          "id": "lDKN14NKmftAMVBa",
+          "name": "Groq account 4"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "alternate agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "optimization agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "email assistant",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "crisis agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "text agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crisis agent": {
+      "main": [
+        [
+          {
+            "node": "alternate agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "alternate agent": {
+      "main": [
+        [
+          {
+            "node": "optimization agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "optimization agent": {
+      "main": [
+        [
+          {
+            "node": "report agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "email assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email assistant": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        []
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "image agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "image agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "report agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "report agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "real data": {
+      "main": [
+        [
+          {
+            "node": "crisis agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "image agent": {
+      "main": [
+        [
+          {
+            "node": "real data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "text agent": {
+      "main": [
+        [
+          {
+            "node": "real data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "text agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "0314087a-ea8c-45dd-8e42-e03661a5dc4c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "617a396d129ce4c0874538b2afeb4fbfd9ce868904edc4ebf5d4713b25be8b56"
+  },
+  "id": "2Rm0pcOwZK3Te8Hi",
+  "tags": []
+}
